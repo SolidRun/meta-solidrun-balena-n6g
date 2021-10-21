@@ -1,0 +1,35 @@
+From 7d1e720d9ebe247a4e041dba78a9b6e029e10b21 Mon Sep 17 00:00:00 2001
+From: Eric Bree <eric.bree@solid-run.com>
+Date: Wed, 16 Dec 2020 08:11:58 -0500
+Subject: ARM: mach-imx: update BUSFREQ compile option
+
+This fixes the build in the instance where you are only building for
+IMX6/IMX6Q without having to select IMX7D.
+
+Signed-off-by: Eric Bree <eric.bree@solid-run.com>
+
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index 42e609b75d31..3991650cc428 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -500,6 +500,7 @@ config SOC_IMX6
+ 	select HAVE_IMX_SRC
+ 	select MFD_SYSCON
+ 	select PL310_ERRATA_769419 if CACHE_L2X0
++	select HAVE_IMX_BUSFREQ
+ 
+ config SOC_IMX6Q
+ 	bool "i.MX6 Quad/DualLite support"
+diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
+index 1a75a019b163..152c0ab734fc 100644
+--- a/arch/arm/mach-imx/Makefile
++++ b/arch/arm/mach-imx/Makefile
+@@ -98,7 +98,7 @@ obj-$(CONFIG_SOC_IMX7D_CA7) += mach-imx7d.o pm-imx7.o ddr3_freq_imx7d.o smp_wfe.
+ obj-$(CONFIG_SOC_IMX7D_CM4) += mach-imx7d-cm4.o
+ obj-$(CONFIG_SOC_IMX7ULP) += mach-imx7ulp.o pm-imx7ulp.o
+ 
+-obj-y += busfreq-imx.o busfreq_ddr3.o busfreq_lpddr2.o
++obj-$(CONFIG_HAVE_IMX_BUSFREQ) += busfreq-imx.o busfreq_ddr3.o busfreq_lpddr2.o
+ AFLAGS_smp_wfe.o :=-Wa,-march=armv7-a
+ AFLAGS_smp_wfe_imx6.o :=-Wa,-march=armv7-a
+ AFLAGS_ddr3_freq_imx7d.o :=-Wa,-march=armv7-a
